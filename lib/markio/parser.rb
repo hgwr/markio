@@ -8,6 +8,7 @@ module Markio
     end
 
     def parse
+      @prev_bookmark = nil
       bookmarks = []
       traverse(@document, []) do |bookmark|
         bookmarks << bookmark
@@ -23,8 +24,21 @@ module Markio
           when 'dl'
             traverse child, folders, &block
             folders.pop
+            yield_bookmark &block
+          when 'dt'
+            yield_bookmark &block
+            traverse child, folders, &block
           when 'a'
-            yield parse_bookmark(child, folders)
+            @prev_bookmark = parse_bookmark(child, folders)
+          when 'dd'
+            unless @prev_bookmark.nil?
+              @prev_bookmark.description = child.text
+              yield @prev_bookmark
+              @prev_bookmark = nil
+            end
+            if child.children.any?
+              traverse child, folders, &block
+            end
           when 'h3'
             folders << child.text
           else
@@ -33,7 +47,13 @@ module Markio
             end
         end
       end
+    end
 
+    def yield_bookmark &block
+      unless @prev_bookmark.nil?
+        yield @prev_bookmark
+        @prev_bookmark = nil
+      end
     end
 
     def parse_bookmark(node, folders)

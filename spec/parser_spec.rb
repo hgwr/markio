@@ -43,6 +43,9 @@ module Markio
       bookmarks.length.should eq 10
       bookmarks.first.folders.length.should eq 0
       bookmarks.last.folders.length.should eq 2
+      bookmarks[5].href.should eq "http://www.yahoo.com/"
+      bookmarks[5].folders.should eq ["Bookmarks Toolbar", 'Nest 1', 'Nest 2', 'tag1', 'tag2']
+      bookmarks[5].description.should match(/Welcome to Yahoo!/)
     end
 
     it 'should raise error for non existing files' do

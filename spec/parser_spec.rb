@@ -49,7 +49,7 @@ module Markio
     end
 
     it 'should raise error for non existing files' do
-      expect { Markio.parse File.open "spec/assets/not_found.html" }.to raise_error
+      expect { Markio.parse File.open "spec/assets/not_found.html" }.to raise_error Errno::ENOENT
     end
 
     it 'should handle corrupted data' do

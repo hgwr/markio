@@ -44,6 +44,7 @@ module Markio
       expect(bookmarks.first.folders.length).to eq 0
       expect(bookmarks.last.folders.length).to eq 2
       expect(bookmarks[5].href).to eq "http://www.yahoo.com/"
+      expect(bookmarks[5].icon).to eq "icon-data"
       expect(bookmarks[5].folders).to eq ["Bookmarks Toolbar", 'Nest 1', 'Nest 2', 'tag1', 'tag2']
       expect(bookmarks[5].description).to match(/Welcome to Yahoo!/)
     end

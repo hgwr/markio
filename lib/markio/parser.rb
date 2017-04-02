@@ -63,6 +63,7 @@ module Markio
       end
       bookmark = Bookmark.new
       bookmark.href = data['href']
+      bookmark.icon = data['icon']
       bookmark.title = node.text
       bookmark.folders = (Array.new(folders) + parse_tags(data['tags'])).uniq
       bookmark.add_date = parse_timestamp data['add_date']

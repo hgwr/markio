@@ -49,6 +49,43 @@ module Markio
       expect(bookmarks[5].description).to match(/Welcome to Yahoo!/)
     end
 
+    it 'should parse instapaper exports' do
+      bookmarks = Markio.parse File.open "spec/assets/instapaper-export.html" 
+
+      expect(bookmarks.length).to eq 5
+      expect(bookmarks.first.folders.length).to eq 0
+      expect(bookmarks.last.folders.length).to eq 0
+
+      [ ["https://ja.wikipedia.org/", "Wikipedia"],
+        ["https://soundcloud.com/", "soundcloud"],
+        ["http://www.codinghorror.com/blog/2012/05/please-dont-learn-to-code.html", "Coding Horror: Please Don't Learn to Code"],
+        ["http://www.codinghorror.com/blog/2012/05/so-you-want-to-be-a-programmer.html", "Coding Horror: So You Want to be a Programmer"],
+        ["http://www.google.com/", "Google"] ].each_with_index do |data, index|
+        url, title = data
+        expect(bookmarks[index].href).to eq url
+        expect(bookmarks[index].title).to eq title
+      end
+    end
+
+    it 'should parse pocket exports' do
+      bookmarks = Markio.parse File.open "spec/assets/pocket_export.html" 
+
+      expect(bookmarks.length).to eq 5
+      expect(bookmarks.first.folders.length).to eq 0
+      expect(bookmarks.last.folders.length).to eq 0
+
+      [ ["http://bliki-ja.github.io/RollerSkateImplementation/", "ローラースケート実装", []],
+        ["https://en.wikipedia.org/wiki/Zaouli", "Zaouli - Wikipedia", ["Zaouli"]],
+        ["http://www.paulgraham.com/spam.html", "A Plan for Spam", []],
+        ["https://ja.wikipedia.org/", "Wikipedia", []],
+        ["https://soundcloud.com/", "soundcloud", []] ].each_with_index do |data, index|
+        url, title, tags = data
+        expect(bookmarks[index].href).to eq url
+        expect(bookmarks[index].title).to eq title
+        expect(bookmarks[index].folders).to eq tags
+      end
+    end
+
     it 'should raise error for non existing files' do
       expect { Markio.parse File.open "spec/assets/not_found.html" }.to raise_error Errno::ENOENT
     end

@@ -21,11 +21,11 @@ module Markio
     def traverse node, folders, &block
       node.xpath("./*").each do |child|
         case child.name.downcase
-          when 'dl'
+          when 'dl', 'ol', 'ul'
             traverse child, folders, &block
             folders.pop
             yield_bookmark &block
-          when 'dt'
+          when 'dt', 'li'
             yield_bookmark &block
             traverse child, folders, &block
           when 'a'
